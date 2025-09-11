@@ -2,7 +2,7 @@ import { triggerUnauthorized } from "./authBus";
 
 const API_BASE = import.meta.env.PROD
   ? ""
-  : import.meta.env.VITE_API_BASE ?? "http://localhost:4000";
+  : import.meta.env.VITE_API_BASE ?? "http://4000:4000";
 
 type Options = RequestInit & { _retried?: boolean };
 
