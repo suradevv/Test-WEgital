@@ -1,0 +1,43 @@
+services:
+  db:
+    image: mysql:8
+    container_name: todo-mysql
+    environment:
+      MYSQL_DATABASE: test_todo
+      MYSQL_ROOT_PASSWORD: 123456789
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    restart: unless-stopped
+
+  api:
+    build: ./todo-api
+    container_name: todo-api
+    env_file: ./todo-api/.env
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:4000/api/health"]
+      interval: 20s
+      timeout: 3s
+      retries: 5
+
+  web:
+    build: ./todo-web
+    container_name: todo-web
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  dbdata:
