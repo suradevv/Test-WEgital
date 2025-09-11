@@ -1,23 +1,22 @@
-# ---------- Build TS ----------
-FROM node:20-alpine AS builder
+# ---- deps ----
+FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
+
+# ---- build ----
+FROM deps AS build
+WORKDIR /app
 COPY . .
 RUN npm run build
 
-# ---------- Prod deps ----------
-FROM node:20-alpine AS proddeps
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --omit=dev
-
-# ---------- Runner ----------
-FROM node:20-alpine
+# ---- run ----
+FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
-COPY --from=proddeps /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
-COPY package*.json ./
+COPY --from=build /app/package*.json ./
+RUN npm ci --omit=dev
+COPY --from=build /app/dist ./dist
 EXPOSE 4000
+# เปลี่ยนบรรทัดนี้ให้เป็น index.js
 CMD ["node", "dist/index.js"]

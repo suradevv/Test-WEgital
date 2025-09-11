@@ -1,4 +1,6 @@
-dist/
-node_modules/
-.vite/
-*.log
+node_modules
+dist
+.git
+.env
+npm-debug.log
+.DS_Store
