@@ -1,5 +1,5 @@
 import { Segmented, Space, theme, Button, Popconfirm, App as AntdApp } from 'antd';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSettings } from '../context/SettingsContext';
 import { apiFetch } from '../lib/api';
