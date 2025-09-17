@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 type Props = {
     loading?: boolean;
     onSubmit: (values: { email: string; password: string }) => void | Promise<void>;
-    onSwitch?: () => void; // เปลี่ยนไปแท็บ Login
+    onSwitch?: () => void;
 };
 
 export default function RegisterForm({ loading, onSubmit, onSwitch }: Props) {

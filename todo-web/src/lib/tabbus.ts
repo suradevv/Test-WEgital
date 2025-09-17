@@ -1,4 +1,3 @@
-// ช่องทางสื่อสารระหว่างแท็บในเครื่องเดียวกัน
 export const tabBus = new BroadcastChannel('todos');
 
 export function sendCreated(item: any) {

@@ -13,16 +13,14 @@ export default function RequireAuth({ children }: { children: ReactNode }) {
   const loc = useLocation();
   const { message } = AntdApp.useApp();
 
-  // ฟังก์ชัน logout กลาง
   const doLogout = async () => {
     try {
       await fetch(`${API_BASE}/api/auth/logout`, { method: 'POST', credentials: 'include' });
-    } catch {}
+    } catch { }
     message.warning('Session expired. Please sign in again.');
     nav('/login', { replace: true, state: { from: loc.pathname + loc.search } });
   };
 
-  // เช็คตอนเข้าเพจ
   useEffect(() => {
     let alive = true;
     (async () => {
@@ -31,19 +29,16 @@ export default function RequireAuth({ children }: { children: ReactNode }) {
       setOk(r.ok);
       setChecking(false);
       if (!r.ok) {
-        // กรณีไม่มี token/หมดอายุตั้งแต่แรก
         doLogout();
       }
     })();
     return () => { alive = false; };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ฟังกรณีหมดอายุระหว่างใช้งาน (apiFetch triggerUnauthorized)
   useEffect(() => {
     const off = onUnauthorized(doLogout);
     return off;
-  }, []); // nav/loc มาจาก closure ได้
+  }, []);
 
   if (checking) {
     return (

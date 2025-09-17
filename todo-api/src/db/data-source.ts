@@ -6,7 +6,7 @@ import { Todo } from "../entities/todo.entity";
 export const AppDataSource = new DataSource({
   type: "mysql",
   url: process.env.DATABASE_URL,
-  synchronize: true, // DEV เท่านั้น
+  synchronize: true, 
   logging: false,
   entities: [User, Todo],
   charset: "utf8mb4",

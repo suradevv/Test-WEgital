@@ -13,18 +13,17 @@ export default function TodoToolbar({
 }) {
   const { t } = useTranslation(['todos']);
   const screens = Grid.useBreakpoint();
-  const isMobile = !screens.md; // < md
+  const isMobile = !screens.md;
 
   return (
     <>
-      {/* Header */}
       <Flex
         align={isMobile ? 'start' : 'center'}
         justify="space-between"
         wrap
         gap={12}
         style={{ marginTop: 12 }}
-        vertical={isMobile}       // ✅ จอเล็กขึ้นเป็นคอลัมน์
+        vertical={isMobile}
       >
         <Flex align="center" gap={12} wrap>
           <Typography.Title level={3} style={{ margin: 0 }}>
@@ -47,8 +46,7 @@ export default function TodoToolbar({
         </Space>
       </Flex>
 
-      {/* Search + Filter */}
-      <Flex gap={12} wrap vertical={isMobile}>  {/* ✅ จอเล็กวางคนละบรรทัด */}
+      <Flex gap={12} wrap vertical={isMobile}>
         <Input.Search
           placeholder={t('todos:search')}
           allowClear
@@ -58,7 +56,7 @@ export default function TodoToolbar({
         />
         <div style={{ width: isMobile ? '100%' : 'auto' }}>
           <Segmented<Filter>
-            block={isMobile as any}    // ✅ ให้เต็มความกว้างเมื่อมือถือ
+            block={isMobile as any}
             value={filter}
             onChange={(v) => setFilter(v as Filter)}
             options={[

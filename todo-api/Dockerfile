@@ -18,5 +18,4 @@ COPY --from=build /app/package*.json ./
 RUN npm ci --omit=dev
 COPY --from=build /app/dist ./dist
 EXPOSE 4000
-# เปลี่ยนบรรทัดนี้ให้เป็น index.js
 CMD ["node", "dist/index.js"]

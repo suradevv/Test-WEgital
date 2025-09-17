@@ -32,10 +32,10 @@ export default function SettingsBar({ showLogout = true }: Props) {
         padding: 8,
         boxShadow: token.boxShadowSecondary,
         backdropFilter: 'blur(6px)',
-        maxWidth: 'calc(100vw - 24px)',     // ✅ ไม่ให้ก้อนนี้ล้นจอ
+        maxWidth: 'calc(100vw - 24px)',
       }}
     >
-      <Space wrap>  {/* ✅ ให้ขึ้นบรรทัดใหม่เมื่อแคบ */}
+      <Space wrap>
         <Segmented size="small" value={lang}
           onChange={(v) => setLang(v as 'th' | 'en')}
           options={[{ label: 'ไทย', value: 'th' }, { label: 'EN', value: 'en' }]}

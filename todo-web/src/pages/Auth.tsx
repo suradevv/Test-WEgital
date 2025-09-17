@@ -55,7 +55,6 @@ export default function Auth() {
                 return;
             }
             message.success(t('auth:register.success'));
-            // สมัครเสร็จ -> ล็อกอินต่อเพื่อรับคุกกี้
             await doLogin(values);
         } catch {
             message.error(t('common:serverError'));

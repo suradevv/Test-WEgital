@@ -8,7 +8,6 @@ import TodoItem from '../components/todos/TodoItem';
 import TodoToolbar from '../components/todos/TodoToolbar';
 import type { Todo, Filter } from '../types/todo';
 
-// realtime helpers
 import { tabBus, sendCreated, sendUpdated, sendDeleted } from '../lib/tabbus';
 import { socket } from '../lib/realtime';
 
@@ -53,7 +52,6 @@ export default function TodosPage() {
 
   useEffect(() => { load(); }, []);
 
-  // ✅ Socket.IO: ฟังอีเวนต์แล้วอัปเดต state
   useEffect(() => {
     const onCreated = (item: Todo) =>
       setTodos(prev => [item, ...prev.filter(x => x.id !== item.id)]);
@@ -73,7 +71,6 @@ export default function TodosPage() {
     };
   }, []);
 
-  // ✅ BroadcastChannel: ซิงก์หลายแท็บบนเครื่องเดียว
   useEffect(() => {
     const onMsg = (ev: MessageEvent) => {
       const { type, payload } = ev.data || {};
@@ -91,7 +88,7 @@ export default function TodosPage() {
       if (!res.ok) throw new Error(await res.text());
       const item: Todo = await res.json();
       setTodos(prev => [item, ...prev]);
-      sendCreated(item); // แจ้งแท็บอื่น
+      sendCreated(item);
       message.success(t('todos:createOk'));
     } catch { message.error(t('todos:createFail')); }
   };
@@ -102,36 +99,35 @@ export default function TodosPage() {
       if (!res.ok) throw new Error(await res.text());
       const item: Todo = await res.json();
       setTodos(prev => prev.map(x => x.id === id ? item : x));
-      sendUpdated(item); // แจ้งแท็บอื่น
+      sendUpdated(item);
       message.success(t('todos:updateOk'));
     } catch { message.error(t('todos:updateFail')); }
   };
 
   const toggleDone = async (id: string, done: boolean) => {
-    setTodos(prev => prev.map(x => x.id === id ? { ...x, done } : x)); // optimistic
+    setTodos(prev => prev.map(x => x.id === id ? { ...x, done } : x));
     try {
       const res = await apiFetch(`/api/todos/${id}/done`, { method: 'PATCH', body: JSON.stringify({ done }) });
       if (!res.ok) throw new Error(await res.text());
 
-      // ถ้า API ไม่คืน item ล่าสุด ก็ broadcast จาก state ที่มีอยู่
       const current = todos.find(x => x.id === id);
       if (current) sendUpdated({ ...current, done } as Todo);
     } catch {
-      setTodos(prev => prev.map(x => x.id === id ? { ...x, done: !done } : x)); // rollback
+      setTodos(prev => prev.map(x => x.id === id ? { ...x, done: !done } : x));
       message.error(t('todos:toggleFail'));
     }
   };
 
   const removeTodo = async (id: string) => {
     const prev = todos;
-    setTodos(prev.filter(x => x.id !== id)); // optimistic
+    setTodos(prev.filter(x => x.id !== id));
     try {
       const res = await apiFetch(`/api/todos/${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error(await res.text());
-      sendDeleted(id); // แจ้งแท็บอื่น
+      sendDeleted(id);
       message.success(t('todos:deleteOk'));
     } catch {
-      setTodos(prev); // rollback
+      setTodos(prev);
       message.error(t('todos:deleteFail'));
     }
   };
